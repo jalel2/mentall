@@ -52,3 +52,23 @@ export const analyzeScores = async (req, res) => {
     res.status(500).json({ message: 'Failed to analyze scores' });
 }
 };
+
+
+export const getAllTestResults = async (req, res) => {
+    try {
+      const results = await TestResult.find().populate('user', 'name email');
+  
+      const formattedResults = results.map(result => ({
+        user: result.user,
+        moodCategory: result.moodCategory,
+        moodLabel: result.moodLabel,
+        totalScore: result.totalScore,
+        createdAt: result.createdAt,
+      }));
+  
+      res.status(200).json({ testResults: formattedResults });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to fetch test results' });
+    }
+  };
